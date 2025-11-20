@@ -51,12 +51,20 @@ def NOx_EI(ei_vector, M, T, p, fuel_flow):
     deltat_LTO = np.array([0.7*60, 2.2*60, 4*60, 26*60])
     NOx_EI_SL = np.interp(fuel_flow_surf, deltat_LTO, ei_vector)
     H = -19*-0.0063
-    NOx_EI = NOx_EI_SL * (delta**1.02/theta**3.3) * np.exp(H)
+    NOx_EI = NOx_EI_SL * np.sqrt(delta**1.02/theta**3.3) * np.exp(H)
     return NOx_EI
 
 
-def nvPM_EI(ei_mat,M,T,p,kwargs):
+def nvPM_EI(ei_nvpm_w, ei_nvpm_n, M, T, p, fuel_flow):
     """
-    Returns nvPM emissions indices (mass, number) at cruise conditions using either BFFM2 or MEEM.
+    Returns nvPM emissions indices (mass, number) at cruise conditions using either BFFM2.
     """
-
+    theta = T/288.15 # in K at alt = 11000 m (near optimum altitude)
+    delta = p/101325 # in Pa at alt = 11000 m (near optimum altitude)
+    fuel_flow_surf = fuel_flow * (theta**3.8/delta)*np.exp(0.2*M**2)
+    deltat_LTO = np.array([0.7*60, 2.2*60, 4*60, 26*60])
+    nvpm_w_EI_SL = np.interp(fuel_flow_surf, deltat_LTO, ei_nvpm_w)
+    nvpm_n_EI_SL = np.interp(fuel_flow_surf, deltat_LTO, ei_nvpm_n)
+    nvpm_w_EI = nvpm_w_EI_SL * (theta**3.3/delta**1.02)
+    nvpm_n_EI = nvpm_n_EI_SL * (theta**3.3/delta**1.02)
+    return nvpm_w_EI, nvpm_n_EI
