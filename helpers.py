@@ -20,5 +20,13 @@ def cruise_mission(origin, destination, mach):
     M_air = 28.97*10**-3
     V = mach * np.sqrt((gamma*R*T)/M_air)
     D = r_earth * np.arccos(np.sin(phi_0)*np.sin(phi_1) + np.cos(phi_0)*np.cos(phi_1)*np.cos(lam_1-lam_0))
-
     return D, D/V
+
+
+def cruise_fuel(L_over_D, distance, mass_initial):
+    reserve = 0.1 # 10 percent of cruise fuel kept reserve
+    eta_0 = 0.3
+    LHV = 43.1 * 10**6
+    C = 9.81/(L_over_D*LHV*eta_0)
+    fuelmass_cruise = (mass_initial * (np.exp(C*distance) - 1))/(1 - reserve*(np.exp(C*distance) - 1))
+    return fuelmass_cruise
