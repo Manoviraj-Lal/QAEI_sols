@@ -3,12 +3,18 @@ import numpy as np
 # Helper functions for the impact calculation
 
 def calc_LTO(ei_vector, fuel_flow_vec):
+    """
+    Returns full LTO cycle fuel burn (kg) and emissions for the given species (assume TO/CO/App/Taxi)
+    """
     deltat_LTO = np.array([0.7*60, 2.2*60, 4*60, 26*60])
     emissions = np.sum(fuel_flow_vec * ei_vector * deltat_LTO * 2)
     return emissions
 
 
 def cruise_mission(origin, destination, mach):
+    """
+    Returns total distance and flight time to travel between two latitude/longitude tuples.
+    """
     phi_0 = origin[0] * np.pi/180
     phi_1 = destination[0] * np.pi/180
     lam_0 = origin[1] * np.pi/180
@@ -24,9 +30,25 @@ def cruise_mission(origin, destination, mach):
 
 
 def cruise_fuel(L_over_D, distance, mass_initial):
+    """
+    Returns total fuel burn (kg) required to cruise between locations.
+    """
     reserve = 0.1 # 10 percent of cruise fuel kept reserve
     eta_0 = 0.3
     LHV = 43.1 * 10**6
     C = 9.81/(L_over_D*LHV*eta_0)
     fuelmass_cruise = (mass_initial * (np.exp(C*distance) - 1))/(1 - reserve*(np.exp(C*distance) - 1))
     return fuelmass_cruise
+
+
+def NOx_EI(ei_vector, M, T, p):
+    """
+    Returns NOx emissions index at cruise conditions using BFFM2.
+    """
+
+
+def nvPM_EI(ei_mat,M,T,p,kwargs):
+    """
+    Returns nvPM emissions indices (mass, number) at cruise conditions using either BFFM2 or MEEM.
+    """
+
