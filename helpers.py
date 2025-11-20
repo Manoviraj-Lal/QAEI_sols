@@ -48,7 +48,11 @@ def NOx_EI(ei_vector, M, T, p, fuel_flow):
     theta = T/288.15 # in K at alt = 11000 m (near optimum altitude)
     delta = p/101325 # in Pa at alt = 11000 m (near optimum altitude)
     fuel_flow_surf = fuel_flow * (theta**3.8/delta)*np.exp(0.2*M**2)
-    return fuel_flow_surf
+    deltat_LTO = np.array([0.7*60, 2.2*60, 4*60, 26*60])
+    NOx_EI_SL = np.interp(fuel_flow_surf, deltat_LTO, ei_vector)
+    H = -19*-0.0063
+    NOx_EI = NOx_EI_SL * (delta**1.02/theta**3.3) * np.exp(H)
+    return NOx_EI
 
 
 def nvPM_EI(ei_mat,M,T,p,kwargs):
