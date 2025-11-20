@@ -9,18 +9,24 @@ def main():
     cruise_ceiling = 40,000 # in ft
     seating = 206 # people
     cruise_LtoD = 20
-    Wingspan = 35.80 # in m
+    wingspan = 35.80 # in m
 
     # Pratt and Whitney
     fuel_flow = {"takeoff" : 1.023, "climbout" : 0.839, "approach" : 0.279, "idle" : 0.099} # in kg/s
     NOx = {"takeoff" : 28.88, "climbout" : 22.01, "approach" : 10.79, "idle" : 5.74} # in g/kg
     nvpm_w = {"takeoff" : 37.7, "climbout" : 31.4, "approach" : 0.4, "idle" : 2.7} # in mg/kg
     nvpm_n = {"takeoff" : 3.12*10**14, "climbout" : 4.01*10**14, "approach" : 4.07*10**13, "idle" : 3.25*10**14} # in number/kg
+    bypass_ratio = 11.6
+    opr = 38.1
+    rated_thrust = 147.3
+
+    # Airport data
+    lhr = "51°28'39”N 000°27'41”W"
+    bos = "42°21'47”N 071°00'23”W"
 
 
 if __name__ == "__main__":
     main()
-
 
 
 
