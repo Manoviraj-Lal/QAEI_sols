@@ -73,9 +73,11 @@ def main():
         "nvpm_n_cruise": [nvpm_n_cruise, "by #"],
         "CO2_cruise": [CO2_cruise, "tonnes"],
         "H2O_cruise": [H2O_cruise, "tonnes"],
-        "SO2_cruise": [SO2_cruise, "tonnes"],
-        "H2SO4_cruise": [H2SO4_cruise, "tonnes"],
+        "SO2_cruise": [SO2_cruise, "kg"],
+        "H2SO4_cruise": [H2SO4_cruise, "kg"],
     }
+
+    print("\n")
     
     for key, value in summary_LTO.items():
         print(key, ":", value)
@@ -85,10 +87,8 @@ def main():
     for key, value in summary_cruise.items():
         print(key, ":", value)
 
+    print("\n")
+
+
 if __name__ == "__main__":
     main()
-
-
-
-
-
