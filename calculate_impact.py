@@ -23,7 +23,7 @@ def main():
     opr = 38.1
     rated_thrust = 147.3 # in kN
 
-    # Airport data
+    # Airport data in degrees
     lhr = (51.477500, -0.461389)
     bos = (42.363056, -71.006389)
 
@@ -32,9 +32,8 @@ def main():
     nvpm_w_LTO = helpers.calc_LTO(nvpm_w,fuel_flow)
     nvpm_n_LTO = helpers.calc_LTO(nvpm_n,fuel_flow)
 
-
-
-
+    distance, time = helpers.cruise_mission(lhr, bos, ma_c)
+    print(distance, time)
 
 
 if __name__ == "__main__":
