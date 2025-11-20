@@ -41,10 +41,14 @@ def cruise_fuel(L_over_D, distance, mass_initial):
     return fuelmass_cruise
 
 
-def NOx_EI(ei_vector, M, T, p):
+def NOx_EI(ei_vector, M, T, p, fuel_flow):
     """
     Returns NOx emissions index at cruise conditions using BFFM2.
     """
+    theta = T/288.15 # in K at alt = 11000 m (near optimum altitude)
+    delta = p/101325 # in Pa at alt = 11000 m (near optimum altitude)
+    fuel_flow_surf = fuel_flow * (theta**3.8/delta)*np.exp(0.2*M**2)
+    return fuel_flow_surf
 
 
 def nvPM_EI(ei_mat,M,T,p,kwargs):

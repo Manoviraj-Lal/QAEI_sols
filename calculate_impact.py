@@ -27,7 +27,7 @@ def main():
     bos = (42.363056, -71.006389)
 
     # LTO Fuel emissions
-    fuel_LTO = helpers.calc_LTO(np.array([1,1,1,1]),fuel_flow)
+    fuel_flow_LTO = helpers.calc_LTO(np.array([1,1,1,1]),fuel_flow)
     NOx_LTO = helpers.calc_LTO(EI_NOx,fuel_flow)
     nvpm_w_LTO = helpers.calc_LTO(EI_nvpm_w,fuel_flow)
     nvpm_n_LTO = helpers.calc_LTO(EI_nvpm_n,fuel_flow)
@@ -39,8 +39,8 @@ def main():
 
     # Cruise fuel
     mass_init = 0.85 * seating * 0.1 + 44.3 # in tonnes w/o fuel ie OEW + payload
-    mass_fuel_cruise = helpers.cruise_fuel(cruise_LtoD, distance, mass_init)
-    mass_TO = mass_init + mass_fuel_cruise
+    mass_fuel_cruise = helpers.cruise_fuel(cruise_LtoD, distance, mass_init) # in tonnes
+    mass_TO = mass_init + mass_fuel_cruise # in tonnes
 
     if mass_fuel_cruise > fuel_capacity:
         sys.exit("Fuel capacity exceeded")
@@ -48,15 +48,13 @@ def main():
         sys.exit("Maximum take off weight exceeded")
 
     # Cruise emissions
-    CO2_cruise = 3.16 * mass_fuel_cruise
-    H2O_cruise = 1.24 * mass_fuel_cruise
-    SO2_cruise = mass_fuel_cruise * 0.0006 * 0.98 * 2 # assume 600 ppm FSC
-    H2SO4_cruise = mass_fuel_cruise * 0.0006 * 0.02 * 3.0625 # assume 600 ppm FSC
+    CO2_cruise = 3.16 * mass_fuel_cruise # in tonnes
+    H2O_cruise = 1.24 * mass_fuel_cruise # in tonnes
+    SO2_cruise = mass_fuel_cruise * 0.0006 * 0.98 * 2 # in tonnes assuming 600 ppm FSC
+    H2SO4_cruise = mass_fuel_cruise * 0.0006 * 0.02 * 3.0625 # in tonnes assuming 600 ppm FSC
 
-
-    
-    
-    
+    fuel_flow_cruise = mass_fuel_cruise*1000/time # in kg/s
+    NOx_cruise =  mass_fuel_cruise * helpers.NOx_EI(EI_NOx, ma_c, 216.6, 22631.7, fuel_flow_cruise)
 
 
 if __name__ == "__main__":
