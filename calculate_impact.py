@@ -80,12 +80,12 @@ def main():
     print("\n")
     
     for key, value in summary_LTO.items():
-        print(key, ":", value)
+        print(f"{key:<{14}} : {value[0]:<{10}.4g} {value[1]}")
     
     print("\n")
 
     for key, value in summary_cruise.items():
-        print(key, ":", value)
+        print(f"{key:<{14}} : {value[0]:<{10}.4g} {value[1]}")
 
     print("\n")
 
