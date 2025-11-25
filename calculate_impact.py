@@ -37,7 +37,7 @@ def main():
         sys.exit("Range exceeded")
 
     # Cruise fuel
-    mass_init = 0.85 * seating * 0.1 + 44.3 # in tonnes w/o fuel ie OEW + payload
+    mass_init = 0.85 * seating * 0.1 + 50.1 # in tonnes w/o fuel ie OEW + payload
     mass_fuel_cruise = helpers.cruise_fuel(cruise_LtoD, distance, mass_init) # in tonnes
     mass_TO = mass_init + mass_fuel_LTO + mass_fuel_cruise # in tonnes
 
