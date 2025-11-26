@@ -4,10 +4,10 @@ import numpy as np
 
 def calc_LTO(ei_vector, fuel_flow_vec):
     """
-    Returns full LTO cycle fuel burn (kg) and emissions for the given species (assume TO/CO/App/Taxi)
+    Returns full LTO cycle fuel burn (kg) and emissions for the given species (assume TO/CO/App/Taxi) per engine
     """
     deltat_LTO = np.array([0.7 * 60, 2.2 * 60, 4 * 60, 26 * 60])
-    emissions = np.sum(fuel_flow_vec * ei_vector * deltat_LTO * 2)
+    emissions = np.sum(fuel_flow_vec * ei_vector * deltat_LTO)
     return emissions
 
 

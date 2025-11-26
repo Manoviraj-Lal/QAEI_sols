@@ -26,10 +26,10 @@ def main():
     bos = (42.363056, -71.006389)
 
     # LTO Fuel emissions
-    mass_fuel_LTO = helpers.calc_LTO(np.array([1,1,1,1]),fuel_flow)/1000 # in tonnes
-    NOx_LTO = helpers.calc_LTO(EI_NOx,fuel_flow) / 1000 # in kg
-    nvpm_w_LTO = helpers.calc_LTO(EI_nvpm_w,fuel_flow) / 1000 # in g
-    nvpm_n_LTO = helpers.calc_LTO(EI_nvpm_n,fuel_flow) # in number
+    mass_fuel_LTO = 2 * helpers.calc_LTO(np.array([1,1,1,1]),fuel_flow)/1000 # in tonnes
+    NOx_LTO = 2 * helpers.calc_LTO(EI_NOx,fuel_flow) / 1000 # in kg
+    nvpm_w_LTO = 2 * helpers.calc_LTO(EI_nvpm_w,fuel_flow) / 1000 # in g
+    nvpm_n_LTO = 2 * helpers.calc_LTO(EI_nvpm_n,fuel_flow) # in number
 
     # Cruise mission
     distance, time = helpers.cruise_mission(lhr, bos, mach) # in m, secs
@@ -52,12 +52,12 @@ def main():
     SO2_cruise = mass_fuel_cruise * 0.0006 * 0.98 * 2 * 1000 # in kg assuming 600 ppm FSC
     H2SO4_cruise = mass_fuel_cruise * 0.0006 * 0.02 * 3.0625 * 1000 # in kg assuming 600 ppm FSC
 
-    fuel_flow_cruise = mass_fuel_cruise*1000/time # in kg/s
-    NOx_cruise =  mass_fuel_cruise * helpers.NOx_EI(EI_NOx, mach, 216.6, 22631.7, fuel_flow_cruise) # in kg (tonnes * g/kg)
+    fuel_flow_cruise = mass_fuel_cruise*1000/(2*time) # per engine in kg/s
+    NOx_cruise =  2 * mass_fuel_cruise * helpers.NOx_EI(EI_NOx, mach, 216.6, 22631.7, fuel_flow_cruise) # in kg (tonnes * g/kg)
 
     EI_nvpm_w_cruise, EI_nvpm_n_cruise = helpers.nvPM_EI(EI_nvpm_w, EI_nvpm_n, mach, 216.6, 22631.7, fuel_flow_cruise) # in mg/kg, number/kg
-    nvpm_w_cruise = mass_fuel_cruise * EI_nvpm_w_cruise # in g (tonnes * mg/kg)
-    nvpm_n_cruise =  mass_fuel_cruise * EI_nvpm_n_cruise * 1000 # in number 
+    nvpm_w_cruise = 2 * mass_fuel_cruise * EI_nvpm_w_cruise # in g (tonnes * mg/kg)
+    nvpm_n_cruise =  2 * mass_fuel_cruise * EI_nvpm_n_cruise * 1000 # in number 
 
     summary_LTO = {
         "Fuel_LTO" : [mass_fuel_LTO, "tonnes"],
