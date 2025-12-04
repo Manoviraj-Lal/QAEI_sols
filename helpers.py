@@ -5,6 +5,9 @@ import numpy as np
 def calc_LTO(ei_vector, fuel_flow_vec):
     """
     Returns full LTO cycle fuel burn (kg) and emissions for the given species (assume TO/CO/App/Taxi) per engine
+    
+    :param ei_vector: LTO emissions index vector (given for an engine)
+    :param fuel_flow_vec: LTO fuel flow vector (given for an engine)
     """
     deltat_LTO = np.array([0.7 * 60, 2.2 * 60, 4 * 60, 26 * 60])
     emissions = np.sum(fuel_flow_vec * ei_vector * deltat_LTO)
@@ -14,7 +17,12 @@ def calc_LTO(ei_vector, fuel_flow_vec):
 def cruise_mission(origin, destination, mach):
     """
     Returns total distance and flight time to travel between two latitude/longitude tuples.
+    
+    :param origin: latitude, longitude tuple of origin
+    :param destination: latitude, longitude tuple of destination
+    :param mach: cruise mach number
     """
+    
     phi_0 = origin[0] * np.pi / 180
     phi_1 = destination[0] * np.pi / 180
     lam_0 = origin[1] * np.pi / 180
@@ -35,7 +43,12 @@ def cruise_mission(origin, destination, mach):
 def cruise_fuel(L_over_D, distance, mass_initial):
     """
     Returns total fuel burn (kg) required to cruise between locations.
+    
+    :param L_over_D: Lift to drag ratio of the aircraft
+    :param distance: cruise distance flown
+    :param mass_initial: mass of payload + OEW
     """
+
     reserve = 0.1  # 10 percent of cruise fuel kept reserve
     eta_0 = 0.3
     LHV = 43.1 * 10**6
@@ -49,6 +62,12 @@ def cruise_fuel(L_over_D, distance, mass_initial):
 def NOx_EI(ei_vector, M, T, p, fuel_flow):
     """
     Returns NOx emissions index at cruise conditions using BFFM2.
+    
+    :param ei_vector: LTO emissions index vector (given for an engine)
+    :param M: cruise mach number
+    :param T: temperature at cruise
+    :param p: pressure at cruise
+    :param fuel_flow: cruise fuel flow rate
     """
     theta = T / 288.15  # in K at alt = 11000 m (near optimum altitude)
     delta = p / 101325  # in Pa at alt = 11000 m (near optimum altitude)
@@ -63,6 +82,13 @@ def NOx_EI(ei_vector, M, T, p, fuel_flow):
 def nvPM_EI(ei_nvpm_w, ei_nvpm_n, M, T, p, fuel_flow):
     """
     Returns nvPM emissions indices (mass, number) at cruise conditions using either BFFM2.
+    
+    :param ei_nvpm_w:  LTO emissions index vector for nvpm by weight (given for an engine)
+    :param ei_nvpm_n: LTO emissions index vector for nvpm by mass (given for an engine)
+    :param M: cruise mach number
+    :param T: temperature at cruise
+    :param p: pressure at cruise
+    :param fuel_flow: cruise fuel flow rate
     """
     theta = T / 288.15  # in K at alt = 11000 m (near optimum altitude)
     delta = p / 101325  # in Pa at alt = 11000 m (near optimum altitude)
@@ -73,3 +99,13 @@ def nvPM_EI(ei_nvpm_w, ei_nvpm_n, M, T, p, fuel_flow):
     nvpm_w_EI = nvpm_w_EI_SL * (theta**3.3 / delta**1.02)
     nvpm_n_EI = nvpm_n_EI_SL * (theta**3.3 / delta**1.02)
     return nvpm_w_EI, nvpm_n_EI
+
+
+def calc_waypoints(start, end, N):
+    """
+    Docstring for calc_waypoints
+    
+    :param start: Description
+    :param end: Description
+    :param N: Description
+    """
