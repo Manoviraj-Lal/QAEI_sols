@@ -5,7 +5,8 @@ import math
 
 def calc_LTO(ei_vector, fuel_flow_vec):
     """
-    Returns full LTO cycle fuel burn (kg) and emissions for the given species (assume TO/CO/App/Taxi) per engine
+    Returns full LTO cycle fuel burn (kg) and emissions 
+    for the given species (assume TO/CO/App/Taxi) per engine
     
     :param ei_vector: LTO emissions index vector (given for an engine)
     :param fuel_flow_vec: LTO fuel flow vector (given for an engine)
@@ -18,7 +19,8 @@ def calc_LTO(ei_vector, fuel_flow_vec):
 
 def cruise_mission(origin, destination, mach):
     """
-    Returns total distance and flight time to travel between two latitude/longitude tuples
+    Returns total distance and flight time to travel between 
+    two latitude/longitude tuples
     
     :param origin: latitude, longitude tuple of origin
     :param destination: latitude, longitude tuple of destination

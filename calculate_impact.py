@@ -79,7 +79,7 @@ def main():
         "H2SO4_cruise": [H2SO4_cruise, "kg"],
     }
 
-    print("\n")
+    print("")
     
     for key, value in summary_LTO.items():
         print(f"{key:<{14}} : {value[0]:<{10}.4g} {value[1]}")
@@ -95,11 +95,7 @@ def main():
     # Generate waypoints along great circle for the flight path
     waypoints = helpers.calc_waypoints(lhr, bos, 50)
     
-    print("Waypoints from London to Boston:")
-    for i, (lat, lon) in enumerate(waypoints):
-        print(f"  {i+1}. ({lat:.4f}°, {lon:.4f}°)")
-    
-    print("\n")
+    print("Waypoints from London to Boston shown on plot\n")
 
     lat_val = [x[0] for x in waypoints]
     lon_val = [x[1] for x in waypoints]
