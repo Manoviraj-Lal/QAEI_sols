@@ -1,6 +1,7 @@
 import numpy as np
 import helpers
 import sys
+import matplotlib.pyplot as plt
 
 np.set_printoptions(legacy='1.25')
 
@@ -59,6 +60,7 @@ def main():
     nvpm_w_cruise = 2 * mass_fuel_cruise * EI_nvpm_w_cruise # in g (tonnes * mg/kg)
     nvpm_n_cruise =  2 * mass_fuel_cruise * EI_nvpm_n_cruise * 1000 # in number 
 
+    # Summarise LTO and cruise emissions and print to user
     summary_LTO = {
         "Fuel_LTO" : [mass_fuel_LTO, "tonnes"],
         "NOx_LTO": [NOx_LTO, "kg"],
@@ -88,6 +90,23 @@ def main():
         print(f"{key:<{14}} : {value[0]:<{10}.4g} {value[1]}")
 
     print("\n")
+
+
+    # Generate waypoints along great circle for the flight path
+    waypoints = helpers.calc_waypoints(lhr, bos, 50)
+    
+    print("Waypoints from London to Boston:")
+    for i, (lat, lon) in enumerate(waypoints):
+        print(f"  {i+1}. ({lat:.4f}°, {lon:.4f}°)")
+    
+    print("\n")
+
+    lat_val = [x[0] for x in waypoints]
+    lon_val = [x[1] for x in waypoints]
+    img = plt.imread("earth.jpg")
+    plt.scatter(lon_val, lat_val, marker="x", c="r")
+    plt.imshow(img, extent=[-180, 180, -90, 90])
+    plt.show()
 
 
 if __name__ == "__main__":

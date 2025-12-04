@@ -1,4 +1,5 @@
 import numpy as np
+import math
 
 # Helper functions for the impact calculation
 
@@ -8,6 +9,7 @@ def calc_LTO(ei_vector, fuel_flow_vec):
     
     :param ei_vector: LTO emissions index vector (given for an engine)
     :param fuel_flow_vec: LTO fuel flow vector (given for an engine)
+    :return: LTO emissions
     """
     deltat_LTO = np.array([0.7 * 60, 2.2 * 60, 4 * 60, 26 * 60])
     emissions = np.sum(fuel_flow_vec * ei_vector * deltat_LTO)
@@ -16,13 +18,13 @@ def calc_LTO(ei_vector, fuel_flow_vec):
 
 def cruise_mission(origin, destination, mach):
     """
-    Returns total distance and flight time to travel between two latitude/longitude tuples.
+    Returns total distance and flight time to travel between two latitude/longitude tuples
     
     :param origin: latitude, longitude tuple of origin
     :param destination: latitude, longitude tuple of destination
     :param mach: cruise mach number
+    :return: distance, time cruising
     """
-    
     phi_0 = origin[0] * np.pi / 180
     phi_1 = destination[0] * np.pi / 180
     lam_0 = origin[1] * np.pi / 180
@@ -42,11 +44,12 @@ def cruise_mission(origin, destination, mach):
 
 def cruise_fuel(L_over_D, distance, mass_initial):
     """
-    Returns total fuel burn (kg) required to cruise between locations.
+    Returns total fuel burn (kg) required to cruise between locations
     
     :param L_over_D: Lift to drag ratio of the aircraft
     :param distance: cruise distance flown
     :param mass_initial: mass of payload + OEW
+    :return: cruise fuel consumption by mass
     """
 
     reserve = 0.1  # 10 percent of cruise fuel kept reserve
@@ -61,13 +64,14 @@ def cruise_fuel(L_over_D, distance, mass_initial):
 
 def NOx_EI(ei_vector, M, T, p, fuel_flow):
     """
-    Returns NOx emissions index at cruise conditions using BFFM2.
+    Returns NOx emissions index at cruise conditions using BFFM2
     
     :param ei_vector: LTO emissions index vector (given for an engine)
     :param M: cruise mach number
     :param T: temperature at cruise
     :param p: pressure at cruise
     :param fuel_flow: cruise fuel flow rate
+    :return: NOx_EI after BFFM2
     """
     theta = T / 288.15  # in K at alt = 11000 m (near optimum altitude)
     delta = p / 101325  # in Pa at alt = 11000 m (near optimum altitude)
@@ -81,7 +85,7 @@ def NOx_EI(ei_vector, M, T, p, fuel_flow):
 
 def nvPM_EI(ei_nvpm_w, ei_nvpm_n, M, T, p, fuel_flow):
     """
-    Returns nvPM emissions indices (mass, number) at cruise conditions using either BFFM2.
+    Returns nvPM emissions indices (mass, number) at cruise conditions using either BFFM2
     
     :param ei_nvpm_w:  LTO emissions index vector for nvpm by weight (given for an engine)
     :param ei_nvpm_n: LTO emissions index vector for nvpm by mass (given for an engine)
@@ -89,6 +93,7 @@ def nvPM_EI(ei_nvpm_w, ei_nvpm_n, M, T, p, fuel_flow):
     :param T: temperature at cruise
     :param p: pressure at cruise
     :param fuel_flow: cruise fuel flow rate
+    :return: nvpm_w_EI, nvpm_n_EI after BFFM2
     """
     theta = T / 288.15  # in K at alt = 11000 m (near optimum altitude)
     delta = p / 101325  # in Pa at alt = 11000 m (near optimum altitude)
@@ -103,9 +108,46 @@ def nvPM_EI(ei_nvpm_w, ei_nvpm_n, M, T, p, fuel_flow):
 
 def calc_waypoints(start, end, N):
     """
-    Docstring for calc_waypoints
+    Returns vector of N latitude, longitude pairs of evenly-spaced waypoints
+    along the great circle route between start and end points
     
-    :param start: Description
-    :param end: Description
-    :param N: Description
+    :param start: latitude, longitude tuple of start (in degrees)
+    :param end: latitude, longitude tuple of end (in degrees)
+    :param N: number of waypoints (including start and end)
+    :return: list of (lat, lon) tuples
     """
+    if N < 2:
+        raise ValueError("N must be at least 2")
+    
+    # Convert to radians
+    lat1, lon1 = math.radians(start[0]), math.radians(start[1])
+    lat2, lon2 = math.radians(end[0]), math.radians(end[1])
+    
+    # Calculate angular distance using haversine
+    dlat = lat2 - lat1
+    dlon = lon2 - lon1
+    a = math.sin(dlat/2)**2 + math.cos(lat1) * math.cos(lat2) * math.sin(dlon/2)**2
+    d = 2 * math.atan2(math.sqrt(a), math.sqrt(1-a))
+    
+    waypoints = []
+    
+    for i in range(N):
+        # Fraction along the route (0 to 1)
+        f = i / (N - 1)
+        
+        # Interpolate along the great circle
+        A = math.sin((1-f)*d) / math.sin(d)
+        B = math.sin(f*d) / math.sin(d)
+        
+        x = A * math.cos(lat1) * math.cos(lon1) + B * math.cos(lat2) * math.cos(lon2)
+        y = A * math.cos(lat1) * math.sin(lon1) + B * math.cos(lat2) * math.sin(lon2)
+        z = A * math.sin(lat1) + B * math.sin(lat2)
+        
+        # Convert back to lat/lon
+        lat = math.atan2(z, math.sqrt(x**2 + y**2))
+        lon = math.atan2(y, x)
+        
+        # Convert to degrees
+        waypoints.append((math.degrees(lat), math.degrees(lon)))
+    
+    return waypoints
