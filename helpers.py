@@ -153,3 +153,27 @@ def calc_waypoints(start, end, N):
         waypoints.append((math.degrees(lat), math.degrees(lon)))
     
     return waypoints
+
+
+def calc_burden(vv, air, mol_mass):
+    """
+    Returns burden of a species given the volumetric mixing ratio of the species
+    
+    :param vv: ??
+    :param air: mass of air in that cell
+    :param mol_mass: molar mass of the species
+    :return: burden of a given species
+    """
+    # DISCRETIZATION PART?? What is this vv
+    burden = air * vv * (mol_mass/28.97)
+    return burden
+
+
+def calc_column(nc_file, species):
+    """
+    Return [time,lat,lon] array of column density, in molec/cm2
+    
+    :param nc_file: Description
+    :param species: Description
+    :return: time, lat, lon
+    """
